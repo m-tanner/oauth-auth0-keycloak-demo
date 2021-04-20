@@ -23,18 +23,9 @@ import scala.util.{Failure, Success, Try}
  *
  * Get started with Keycloak: https://www.keycloak.org/getting-started/getting-started-docker
  * Build an authorization service (this) with Keycloak: https://www.keycloak.org/docs/latest/authorization_services/index.html
- *
- * You can even setup Keycloak with Terraform: https://registry.terraform.io/providers/mrparkers/keycloak/latest/docs
- *
- * ~ curl --location --request POST 'http://localhost:8080/auth/realms/myrealm/protocol/openid-connect/token' \
- *        --header 'Content-Type: application/x-www-form-urlencoded' \
- *        --data-urlencode 'client_id=myclient' \
- *        --data-urlencode 'client_secret=3fe1f2ea-8adf-44c6-80c0-22d954b64dab' \
- *        --data-urlencode 'scope=email' \
- *        --data-urlencode 'grant_type=client_credentials'
- * {"access_token":"REDACTED","expires_in":300,"refresh_expires_in":0,"token_type":"Bearer","not-before-policy":0,"scope":"email profile"}
- *
  * What's audience? https://www.keycloak.org/docs/4.8/server_admin/#_audience
+ *
+ * You can even setup Keycloak with Terraform: https://registry.terraform.io/providers/mrparkers/keycloak/latest/docs but I haven't tried this yet
  */
 class AuthService @Inject()(config: Configuration) {
   implicit val clock: Clock = Clock.systemUTC
