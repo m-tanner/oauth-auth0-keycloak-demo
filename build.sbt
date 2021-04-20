@@ -1,11 +1,10 @@
 name := "oauth_spike_2"
 organization := "com.axon"
- 
+
 version := "1.0" 
-      
+
 lazy val `oauth_spike_2` = (project in file(".")).enablePlugins(PlayScala)
 
-      
 resolvers += "Akka Snapshot Repository" at "https://repo.akka.io/snapshots/"
 resolvers += "Nexus" at "https://nexus.taservs.net/content/groups/public"
 
@@ -22,7 +21,3 @@ libraryDependencies ++= Seq(
   "org.jboss.logging"         % "jboss-logging"         % "3.3.0.Final",
   "org.apache.httpcomponents" % "httpclient"            % "4.5.1"
 )
-
-unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )  
-
-      
