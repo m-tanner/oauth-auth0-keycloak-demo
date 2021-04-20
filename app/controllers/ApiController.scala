@@ -13,15 +13,7 @@ class ApiController @Inject()(cc: ControllerComponents,
                               authAction: AuthAction)
   extends AbstractController(cc) {
 
-  // Create a simple 'ping' endpoint for now, so that we
-  // can get up and running with a basic implementation
-  def ping: Action[AnyContent] = Action { implicit request =>
-    Ok("Hello, Scala!")
-  }
-
-  def health: Action[AnyContent] = Action { implicit request =>
-    Ok
-  }
+  def health: Action[AnyContent] = Action { implicit request => Ok }
 
   def getPost(postId: Int): Action[AnyContent] = authAction { implicit request =>
     dataRepository.getPost(postId) map { post =>
