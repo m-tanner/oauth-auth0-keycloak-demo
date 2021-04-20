@@ -1,0 +1,8 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET     /api/ping                           controllers.ApiController.ping
+GET     /health                             controllers.ApiController.health
+GET     /api/post/:postId                   controllers.ApiController.getPost(postId: Int)
+GET     /api/post/:postId/comments          controllers.ApiController.getComments(postId: Int)
