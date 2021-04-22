@@ -14,3 +14,7 @@ dist
 /RUNNING_PID
 /.settings
 /.bsp
+*/.terraform
+*.hcl
+*.tfstate
+*.backup

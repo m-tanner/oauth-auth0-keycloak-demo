@@ -24,6 +24,7 @@ import scala.util.{Failure, Success, Try}
  * Get started with Keycloak: https://www.keycloak.org/getting-started/getting-started-docker
  * Build an authorization service (this) with Keycloak: https://www.keycloak.org/docs/latest/authorization_services/index.html
  * What's audience? https://www.keycloak.org/docs/4.8/server_admin/#_audience
+ * https://stackoverflow.com/questions/53543117/how-to-setup-public-key-for-verifying-jwt-tokens-from-keycloak
  *
  * You can even setup Keycloak with Terraform: https://registry.terraform.io/providers/mrparkers/keycloak/latest/docs but I haven't tried this yet
  */
@@ -36,14 +37,7 @@ class AuthService @Inject()(config: Configuration) {
   private val resource = config.get[String]("keycloak.resource")
   private val publicClient = config.get[Boolean]("keycloak.public-client")
   private val confidentialPort = config.get[Int]("keycloak.confidential-port")
-
-  // Your audience, only this application for now
   private val audience = config.get[String]("client-name")
-  // The issuer of the token.
-  private val issuer = s"$authServerUrl/realms/$realm"
-  // The provider of the JWK
-  // (https://stackoverflow.com/questions/53543117/how-to-setup-public-key-for-verifying-jwt-tokens-from-keycloak)
-  private val provider = s"$issuer/protocol/openid-connect/certs"
 
   private val keycloakDeployment: KeycloakDeployment =
     KeycloakDeploymentBuilder.build(new ByteArrayInputStream(s"""
@@ -72,7 +66,7 @@ class AuthService @Inject()(config: Configuration) {
     (splitToken andThen decodeElements) (token) flatMap {
       case (header, _, _) =>
         val jwtHeader = JwtJson.parseHeader(header)  // extract the header
-        val jwkProvider = new UrlJwkProvider(new URL(provider))
+        val jwkProvider = new UrlJwkProvider(new URL(keycloakDeployment.getJwksUrl))
 
         // Use jwkProvider to load the JWKS data and return the JWK
         jwtHeader.keyId.map { k =>
@@ -95,7 +89,7 @@ class AuthService @Inject()(config: Configuration) {
   }
 
   private def validateClaims(claims: JwtClaim) = {
-    if (claims.isValid(issuer, audience)(clock = clock)) {
+    if (claims.isValid(keycloakDeployment.getRealmInfoUrl, audience)(clock = clock)) {
       Success(claims)
     } else {
       Failure(new Exception("The JWT did not pass validation"))
