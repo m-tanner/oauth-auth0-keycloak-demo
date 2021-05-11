@@ -8,7 +8,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 // Our custom action implementation
-class AuthAction @Inject() (bodyParser: BodyParsers.Default, authService: AuthService)(implicit
+class Auth0Action @Inject() (bodyParser: BodyParsers.Default, auth0Service: Auth0Service)(implicit
     ec: ExecutionContext
 ) extends ActionBuilder[UserRequest, AnyContent] {
 
@@ -25,7 +25,7 @@ class AuthAction @Inject() (bodyParser: BodyParsers.Default, authService: AuthSe
       block: UserRequest[A] => Future[Result]
   ): Future[Result] =
     extractBearerToken(request) map { token =>
-      authService.validateJwt(token) match {
+      auth0Service.validateJwt(token) match {
         case Success(claim) =>
           block(UserRequest(claim, token, request)) // token was valid - proceed!
         case Failure(t) =>

@@ -2,6 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /health                             controllers.ApiController.health
-GET     /api/post/:postId                   controllers.ApiController.getPost(postId: Int)
-GET     /api/post/:postId/comments          controllers.ApiController.getComments(postId: Int)
+GET     /health                                      controllers.ApiController.health
+GET     /api/keycloak/post/:postId                   controllers.ApiController.getPostWithKeycloak(postId: Int)
+GET     /api/keycloak/post/:postId/comments          controllers.ApiController.getCommentsWithKeyCloak(postId: Int)
+GET     /api/auth0/post/:postId                      controllers.ApiController.getPostWithAuth0(postId: Int)
+GET     /api/auth0/post/:postId/comments             controllers.ApiController.getCommentsWithAuth0(postId: Int)
