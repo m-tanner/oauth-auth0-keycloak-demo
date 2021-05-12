@@ -1,6 +1,6 @@
 package repositories
 
-import models.{Comment, Post}
+import models.{ Comment, Post }
 
 import javax.inject.Singleton
 

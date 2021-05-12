@@ -1,6 +1,6 @@
 package models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{ Json, OFormat }
 
 // Represents a comment on a blog post
 case class Comment(id: Int, postId: Int, text: String, authorName: String)

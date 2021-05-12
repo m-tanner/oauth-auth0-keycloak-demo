@@ -4,12 +4,12 @@ import play.api.http.HeaderNames
 import play.api.mvc._
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success}
+import scala.concurrent.{ ExecutionContext, Future }
+import scala.util.{ Failure, Success }
 
 // Our custom action implementation
 class AuthAction @Inject() (bodyParser: BodyParsers.Default, authService: AuthService)(implicit
-    ec: ExecutionContext
+  ec: ExecutionContext
 ) extends ActionBuilder[UserRequest, AnyContent] {
 
   override def parser: BodyParser[AnyContent]               = bodyParser
@@ -21,17 +21,16 @@ class AuthAction @Inject() (bodyParser: BodyParsers.Default, authService: AuthSe
   // Called when a request is invoked. We should validate the bearer token here
   // and allow the request to proceed if it is valid.
   override def invokeBlock[A](
-      request: Request[A],
-      block: UserRequest[A] => Future[Result]
-  ): Future[Result] =
-    extractBearerToken(request) map { token =>
-      authService.validateJwt(token) match {
-        case Success(claim) =>
-          block(UserRequest(claim, token, request)) // token was valid - proceed!
-        case Failure(t) =>
-          Future.successful(Results.Unauthorized(t.getMessage)) // token was invalid - return 401
-      }
-    } getOrElse Future.successful(Results.Unauthorized) // no token was sent - return 401
+    request: Request[A],
+    block: UserRequest[A] => Future[Result]
+  ): Future[Result] = extractBearerToken(request) map { token =>
+    authService.validateJwt(token) match {
+      case Success(claim) =>
+        block(UserRequest(claim, token, request)) // token was valid - proceed!
+      case Failure(t) =>
+        Future.successful(Results.Unauthorized(t.getMessage)) // token was invalid - return 401
+    }
+  } getOrElse Future.successful(Results.Unauthorized) // no token was sent - return 401
 
   // Helper for extracting the token value
   private def extractBearerToken[A](request: Request[A]): Option[String] =

@@ -1,15 +1,16 @@
 package auth
 
 import com.auth0.jwk.UrlJwkProvider
-import pdi.jwt.{JwtAlgorithm, JwtBase64, JwtClaim, JwtJson}
+import pdi.jwt.{ JwtAlgorithm, JwtBase64, JwtClaim, JwtJson }
 import play.api.Configuration
 
 import java.time.Clock
 import javax.inject.Inject
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
-/** Based on https://auth0.com/blog/build-and-secure-a-scala-play-framework-api/
-  */
+/**
+ * Based on https://auth0.com/blog/build-and-secure-a-scala-play-framework-api/
+ */
 class Auth0Service @Inject() (config: Configuration) {
   implicit val clock: Clock = Clock.systemUTC
 
@@ -22,24 +23,23 @@ class Auth0Service @Inject() (config: Configuration) {
   def validateJwt(token: String): Try[JwtClaim] = for {
     jwk <- getJwk(token) // Get the secret key for this token
     claims <- JwtJson.decode(
-      token,
-      jwk.getPublicKey,
-      Seq(JwtAlgorithm.RS256)
-    ) // Decode the token using the secret key
+                token,
+                jwk.getPublicKey,
+                Seq(JwtAlgorithm.RS256)
+              ) // Decode the token using the secret key
     _ <- validateClaims(claims) // validate the data stored inside the token
   } yield claims
 
   // Gets the JWK from the JWKS endpoint using the jwks-rsa library
-  private def getJwk(token: String) =
-    (splitToken andThen decodeElements)(token) flatMap { case (header, _, _) =>
-      val jwtHeader   = JwtJson.parseHeader(header) // extract the header
-      val jwkProvider = new UrlJwkProvider(issuer)
+  private def getJwk(token: String) = (splitToken andThen decodeElements)(token) flatMap { case (header, _, _) =>
+    val jwtHeader   = JwtJson.parseHeader(header) // extract the header
+    val jwkProvider = new UrlJwkProvider(issuer)
 
-      // Use jwkProvider to load the JWKS data and return the JWK
-      jwtHeader.keyId.map { k =>
-        Try(jwkProvider.get(k))
-      } getOrElse Failure(new Exception("Unable to retrieve kid"))
-    }
+    // Use jwkProvider to load the JWKS data and return the JWK
+    jwtHeader.keyId.map { k =>
+      Try(jwkProvider.get(k))
+    } getOrElse Failure(new Exception("Unable to retrieve kid"))
+  }
 
   // A regex that defines the JWT pattern and allows us to extract the header, claims and signature
   private val jwtRegex = """(.+?)\.(.+?)\.(.+?)""".r

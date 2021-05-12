@@ -1,21 +1,21 @@
 package controllers
 
-import auth.{Auth0Action, AuthAction}
+import auth.{ Auth0Action, AuthAction }
 import play.api.libs.json.Json
-import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
+import play.api.mvc.{ AbstractController, Action, AnyContent, ControllerComponents }
 import repositories.DataRepository
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 
 @Singleton
 class ApiController @Inject() (
-    cc: ControllerComponents,
-    dataRepository: DataRepository,
-    authAction: AuthAction,
-    auth0Action: Auth0Action
+  cc: ControllerComponents,
+  dataRepository: DataRepository,
+  authAction: AuthAction,
+  auth0Action: Auth0Action
 ) extends AbstractController(cc) {
 
-  def health: Action[AnyContent] = Action { implicit request => Ok }
+  def health: Action[AnyContent] = Action(implicit request => Ok)
 
   def getPostWithKeycloak(postId: Int): Action[AnyContent] = authAction { implicit request =>
     dataRepository.getPost(postId) map { post =>
