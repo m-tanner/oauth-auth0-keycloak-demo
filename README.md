@@ -153,13 +153,13 @@ Example response:
 
 ## Auth0 Quickstart
 
-1) Run this sbt service with environment variables `AUTH0_DOMAIN=auth0-tutorial-11.us.auth0.com AUTH0_AUDIENCE=https://scala-api.axon.com sbt run 9000`
+1) Run this sbt service with environment variables `AUTH0_DOMAIN=auth0-tutorial-11.us.auth0.com AUTH0_AUDIENCE=https://scala-api.example.com sbt run 9000`
 2) Get a token from Auth0
    ```bash
    curl --request POST \
      --url https://auth0-tutorial-11.us.auth0.com/oauth/token \
      --header 'content-type: application/json' \
-     --data '{"client_id":"<REDACTED>","client_secret":"<REDACTED>","audience":"https://scala-api.axon.com","grant_type":"client_credentials"}'
+     --data '{"client_id":"<REDACTED>","client_secret":"<REDACTED>","audience":"https://scala-api.example.com","grant_type":"client_credentials"}'
    ```
 3) Try out your token
    ```bash

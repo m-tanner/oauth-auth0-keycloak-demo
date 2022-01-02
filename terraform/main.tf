@@ -13,7 +13,7 @@ provider "keycloak" {
   client_id = "terraform"
   # the secret must be manually pasted here after spinning up keycloak in docker per the README
   # this is only okay because this spike is a local demo
-  client_secret = "d9061a07-9780-4166-805f-dfa7ff22ffc0"
+  client_secret = "changeme"
   url           = "http://localhost:8080"
 }
 
